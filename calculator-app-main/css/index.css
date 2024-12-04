@@ -1,0 +1,259 @@
+:root {
+    /* Theme 3 colors (current active theme) */
+    --main-background: hsl(268, 75%, 9%);
+    --toggle-keypad-background: hsl(268, 71%, 12%);
+    --screen-background: hsl(268, 71%, 12%);
+
+    --key-background-dark: hsl(268, 47%, 21%);
+    --key-shadow-dark: hsl(290, 70%, 36%);
+
+    --key-background-accent: hsl(281, 89%, 26%);
+    --key-shadow-accent: hsl(285, 91%, 52%);
+
+    --key-background-equals: hsl(176, 100%, 44%);
+    --key-shadow-equals: hsl(177, 92%, 70%);
+
+    --text-primary: hsl(52, 100%, 62%);
+    --text-dark: hsl(52, 100%, 62%);
+    --text-white: hsl(0, 0%, 100%);
+}
+
+/* Base styles */
+body {
+    background-color: var(--main-background);
+    padding: 50px 24px;
+    max-width: 540px;
+    margin: 0 auto;
+    font-family: 'League Spartan', sans-serif;
+    font-weight: 700;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__theme {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 150px;
+    column-gap: 10px;
+}
+
+/* Theme */
+.theme__labels {
+    width: 70px;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 10px;
+}
+
+.theme {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 3px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-toggle__container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background-color: var(--toggle-keypad-background);
+    border-radius: 25px;
+    overflow: hidden;
+    height: 30px;
+    padding: 3px 5px;
+}
+
+.theme-toggle__input {
+    display: none;
+}
+
+.theme-toggle__option {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.3s;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.theme-toggle__input:checked + .theme-toggle__option {
+    background-color: var(--key-background-equals);
+}
+
+/* Calculator */
+.calculator {
+    margin-top: 20px;
+}
+
+.calculator__display {
+    background-color: var(--screen-background);
+    padding: 30px 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+    min-height: 90px;
+    align-items: center;
+}
+
+.calculator__result {
+    font-size: 32px;
+    text-align: right;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.calculator__result::-webkit-scrollbar {
+    display: none;
+}
+
+.calculator__keypad {
+    background-color: var(--toggle-keypad-background);
+    padding: 20px;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 13px;
+}
+
+.calculator__key {
+    background-color: var(--key-background-dark);
+    border: none;
+    border-radius: 10px;
+    color: var(--text-dark);
+    font-size: 32px;
+    font-family: 'League Spartan', sans-serif;
+    font-weight: 700;
+    padding: 10px 15px;
+    cursor: pointer;
+    box-shadow: 0 4px var(--key-shadow-dark);
+    min-height: 60px;
+}
+
+.calculator__key:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px var(--key-shadow-dark);
+}
+
+.calculator__key--del,
+.calculator__key--reset {
+    background-color: var(--key-background-accent);
+    color: var(--text-white);
+    font-size: 20px;
+    box-shadow: 0 4px var(--key-shadow-accent);
+}
+
+.calculator__key--equals {
+    background-color: var(--key-background-equals);
+    color: var(--text-dark);
+    box-shadow: 0 4px var(--key-shadow-equals);
+    grid-column: span 2;
+}
+
+.calculator__key--reset {
+    grid-column: span 2;
+}
+
+/* Utility classes */
+.text-primary {
+    color: var(--text-primary);
+}
+
+/* Media Query for mobile */
+@media (max-width: 375px) {
+    body {
+        padding: 30px 24px;
+    }
+
+    .calculator__keypad {
+        gap: 13px;
+        padding: 20px;
+    }
+
+    .calculator__key {
+        font-size: 28px;
+        min-height: 50px;
+    }
+}
+
+/* Theme-specific text colors */
+[data-theme="1"] {
+    --main-background: hsl(222, 26%, 31%);
+    --toggle-keypad-background: hsl(223, 31%, 20%);
+    --screen-background: hsl(224, 36%, 15%);
+    
+    --key-background-dark: hsl(30, 25%, 89%);
+    --key-shadow-dark: hsl(28, 16%, 65%);
+    
+    --key-background-accent: hsl(225, 21%, 49%);
+    --key-shadow-accent: hsl(224, 28%, 35%);
+    
+    --key-background-equals: hsl(6, 63%, 50%);
+    --key-shadow-equals: hsl(6, 70%, 34%);
+    
+    --text-primary: hsl(0, 0%, 100%);
+    --text-dark: hsl(221, 14%, 31%);
+    --text-white: hsl(0, 0%, 100%);
+}
+
+[data-theme="2"] {
+    --main-background: hsl(0, 0%, 90%);
+    --toggle-keypad-background: hsl(0, 5%, 81%);
+    --screen-background: hsl(0, 0%, 93%);
+    
+    --key-background-dark: hsl(45, 7%, 89%);
+    --key-shadow-dark: hsl(35, 11%, 61%);
+    
+    --key-background-accent: hsl(185, 42%, 37%);
+    --key-shadow-accent: hsl(185, 58%, 25%);
+    
+    --key-background-equals: hsl(25, 98%, 40%);
+    --key-shadow-equals: hsl(25, 99%, 27%);
+    
+    --text-primary: hsl(60, 10%, 19%);
+    --text-dark: hsl(60, 10%, 19%);
+    --text-white: hsl(0, 0%, 100%);
+}
+
+[data-theme="3"] {
+    --main-background: hsl(268, 75%, 9%);
+    --toggle-keypad-background: hsl(268, 71%, 12%);
+    --screen-background: hsl(268, 71%, 12%);
+    
+    --key-background-dark: hsl(268, 47%, 21%);
+    --key-shadow-dark: hsl(290, 70%, 36%);
+    
+    --key-background-accent: hsl(281, 89%, 26%);
+    --key-shadow-accent: hsl(285, 91%, 52%);
+    
+    --key-background-equals: hsl(176, 100%, 44%);
+    --key-shadow-equals: hsl(177, 92%, 70%);
+    
+    --text-primary: hsl(52, 100%, 62%);
+    --text-dark: hsl(52, 100%, 62%);
+    --text-white: hsl(0, 0%, 100%);
+}
+
+/* Remove the individual theme color classes since we're using data attributes */
+[data-theme="1"] .text-primary,
+[data-theme="2"] .text-primary,
+[data-theme="3"] .text-primary {
+    color: var(--text-primary);
+}

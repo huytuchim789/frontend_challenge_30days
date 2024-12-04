@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Calculator app</title>
+    <link rel="stylesheet" href="/css/index.css" />
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="theme">
+      <div class="theme__labels">
+        <span class="theme__number text-primary">1</span>
+        <span class="theme__number text-primary">2</span>
+        <span class="theme__number text-primary">3</span>
+      </div>
+    </div>
+
+    <header class="header">
+      <span class="header__logo text-primary">calc</span>
+      <div class="header__theme">
+        <span class="header__theme-text text-primary">Theme</span>
+        <div class="theme-toggle">
+          <div class="theme-toggle__container">
+            <input
+              type="radio"
+              id="toggle1"
+              name="toggle"
+              class="theme-toggle__input"
+              checked
+            />
+            <label for="toggle1" class="theme-toggle__option"></label>
+
+            <input
+              type="radio"
+              id="toggle2"
+              name="toggle"
+              class="theme-toggle__input"
+            />
+            <label for="toggle2" class="theme-toggle__option"></label>
+
+            <input
+              type="radio"
+              id="toggle3"
+              name="toggle"
+              class="theme-toggle__input"
+            />
+            <label for="toggle3" class="theme-toggle__option"></label>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="calculator">
+      <div class="calculator__display">
+        <span class="calculator__result text-primary">0</span>
+      </div>
+
+      <div class="calculator__keypad">
+        <button class="calculator__key">7</button>
+        <button class="calculator__key">8</button>
+        <button class="calculator__key">9</button>
+        <button class="calculator__key calculator__key--del">DEL</button>
+
+        <button class="calculator__key">4</button>
+        <button class="calculator__key">5</button>
+        <button class="calculator__key">6</button>
+        <button class="calculator__key">+</button>
+
+        <button class="calculator__key">1</button>
+        <button class="calculator__key">2</button>
+        <button class="calculator__key">3</button>
+        <button class="calculator__key">-</button>
+
+        <button class="calculator__key">.</button>
+        <button class="calculator__key">0</button>
+        <button class="calculator__key">/</button>
+        <button class="calculator__key">×</button>
+
+        <button class="calculator__key calculator__key--reset">RESET</button>
+        <button class="calculator__key calculator__key--equals">=</button>
+      </div>
+    </div>
+
+    <!-- <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+        >Frontend Mentor</a
+      >. Coded by <a href="#">Your Name Here</a>.
+    </div> -->
+    <script src="/js/index.js"></script>
+  </body>
+</html>
