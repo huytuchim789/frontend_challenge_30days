@@ -190,3 +190,125 @@ The project follows BEM (Block Element Modifier) naming convention:
 ## Acknowledgments
 
 Thanks to Frontend Mentor for providing this challenge and the design assets.
+
+### Calculator Implementation Logic
+
+#### 1. State Management
+```javascript
+let currentNumber = "0";      // Current number being entered
+let previousNumber = null;    // Previous number for operations
+let operation = null;         // Current operation (+, -, ×, /)
+let shouldResetScreen = false; // Flag to reset screen after operation
+let displayExpression = "";   // Full expression display
+```
+
+This state design allows us to:
+- Track the current input number
+- Store previous numbers for calculations
+- Handle operation chaining
+- Control display updates
+- Manage the full expression
+
+#### 2. Core Functions Flow
+
+1. **Number Input (appendNumber)**
+```javascript
+function appendNumber(number) {
+    if (shouldResetScreen) {
+        shouldResetScreen = false;
+        currentNumber = "";
+    }
+    // Append number logic...
+    updateDisplay();
+}
+```
+- Handles decimal point validation
+- Manages leading zeros
+- Controls screen reset after operations
+
+2. **Operation Handling (handleOperation)**
+```javascript
+function handleOperation(op) {
+    if (!displayExpression) {
+        displayExpression = currentNumber;
+    } else if (!shouldResetScreen) {
+        displayExpression += ` ${currentNumber}`;
+    }
+    // Operation logic...
+}
+```
+- Builds the expression string
+- Manages operation chaining
+- Updates display appropriately
+
+3. **Calculation (calculate)**
+```javascript
+function calculate() {
+    if (!previousNumber || !operation || shouldResetScreen) return;
+    
+    displayExpression += ` ${currentNumber}`;
+    // Calculation logic...
+    updateDisplay(true);
+}
+```
+- Performs the actual calculation
+- Handles division by zero
+- Updates final result
+
+#### 3. Display Management
+
+The calculator uses two display modes:
+1. **Expression Mode**
+   - Shows full expression (e.g., "1 + 2 + 3")
+   - Updates in real-time as user types
+   - Maintains operation visibility
+
+2. **Result Mode**
+   - Shows final calculation
+   - Clears expression after equals
+   - Handles number formatting
+
+#### 4. Event Flow Example
+
+For the expression "1 + 2 = 3":
+
+1. Press "1":
+```javascript
+currentNumber = "1"
+displayExpression = ""
+Display shows: "1"
+```
+
+2. Press "+":
+```javascript
+currentNumber = "1"
+previousNumber = "1"
+operation = "+"
+displayExpression = "1 +"
+Display shows: "1 +"
+```
+
+3. Press "2":
+```javascript
+currentNumber = "2"
+previousNumber = "1"
+operation = "+"
+displayExpression = "1 +"
+Display shows: "1 + 2"
+```
+
+4. Press "=":
+```javascript
+currentNumber = "3"
+previousNumber = null
+operation = null
+displayExpression = ""
+Display shows: "3"
+```
+
+This implementation:
+- Maintains clear state transitions
+- Provides immediate visual feedback
+- Handles complex calculations
+- Manages display updates efficiently
+- Supports operation chaining
