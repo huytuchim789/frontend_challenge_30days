@@ -95,9 +95,9 @@ function appendOperator(op) {
   // If last char is an operator, replace it
   if (/[\+\-\*\/]$/.test(displayExpression)) {
     displayExpression = displayExpression.slice(0, -1) + op;
-  } else {
+  } else if (displayExpression !== "") {
     // Only add operator if there's something on display
-    if (displayExpression !== "") displayExpression += op;
+    displayExpression += op;
   }
   updateDisplay();
 }
