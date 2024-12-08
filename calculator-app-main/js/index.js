@@ -57,6 +57,7 @@ let previousNumber = null;
 let operator = null;
 let shouldResetScreen = false;
 let displayExpression = "";
+let isLockConsecutiveOperator = false;
 // Theme Switching
 function switchTheme(themeNumber) {
   const theme = themes[themeNumber];
@@ -105,6 +106,7 @@ function appendNumber(number) {
   } else {
     currentNumber += number;
   }
+  isLockConsecutiveOperator = false;
   updateDisplay();
 }
 function calculate() {
@@ -141,9 +143,48 @@ function calculate() {
   operator = null;
   updateDisplay(true);
 }
-function handleDelete() {}
-function handleReset() {}
+function handleReset() {
+  currentNumber = "0";
+  previousNumber = null;
+  operator = null;
+  isLockConsecutiveOperator = false;
+  displayExpression = "";
+  updateDisplay();
+}
+
+function handleDelete() {
+  if (shouldResetScreen) {
+    // If we're about to reset screen, delete the operator instead
+    if (displayExpression) {
+      displayExpression = displayExpression.slice(0, -2); // Remove operator and space
+      operator = null;
+      shouldResetScreen = false;
+      isLockConsecutiveOperator = false;
+      currentNumber = previousNumber;
+      previousNumber = null;
+    }
+
+    console.log("1", 1);
+  } else {
+    if (currentNumber.length === 1) {
+      currentNumber = "";
+      // Reset display expression if we're deleting the last digit
+      console.log("2", 2);
+      if (displayExpression) {
+        displayExpression = displayExpression.slice(
+          0,
+          displayExpression.lastIndexOf(" ")
+        );
+      }
+    } else {
+      currentNumber = currentNumber.slice(0, -1);
+    }
+  }
+  updateDisplay();
+}
+
 function handleOperation(operation) {
+  if (isLockConsecutiveOperator) return;
   if (!displayExpression) {
     displayExpression = currentNumber;
   } else if (!shouldResetScreen) {
@@ -177,6 +218,7 @@ function handleOperation(operation) {
   operator = operation;
   displayExpression += ` ${operation}`;
   shouldResetScreen = true;
+  isLockConsecutiveOperator = true;
   updateDisplay();
 }
 // Event Listeners
@@ -205,3 +247,4 @@ themeTogglesInput.forEach((toggle) => {
 });
 
 initializeTheme();
+updateDisplay();
