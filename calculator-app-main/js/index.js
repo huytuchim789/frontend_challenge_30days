@@ -46,18 +46,17 @@ const themes = {
   },
 };
 
-//Dom Elements
-
-const resultDisplay = document.querySelector(".calculator__result");
-const keys = document.querySelectorAll(".calculator__key");
-const themeTogglesInput = document.querySelectorAll(".theme-toggle__input");
-// Calculator state
 let currentNumber = "0";
 let previousNumber = null;
-let operator = null;
+let operation = null;
 let shouldResetScreen = false;
 let displayExpression = "";
-let isLockConsecutiveOperator = false;
+
+// DOM Elements
+const display = document.querySelector(".calculator__result");
+const keys = document.querySelectorAll(".calculator__key");
+const themeToggles = document.querySelectorAll(".theme-toggle__input");
+
 // Theme Switching
 function switchTheme(themeNumber) {
   const theme = themes[themeNumber];
@@ -82,16 +81,15 @@ function initializeTheme() {
 // Calculator Logic
 function updateDisplay(isResult = false) {
   if (isResult) {
-    resultDisplay.textContent = currentNumber;
+    display.textContent = currentNumber;
     displayExpression = "";
   } else {
+    // Show current expression and current number being entered
     let displayText = displayExpression;
-
-    if (!shouldResetScreen) {
+    if (!shouldResetScreen && currentNumber !== "0") {
       displayText += (displayExpression ? " " : "") + currentNumber;
     }
-
-    resultDisplay.textContent = displayText || currentNumber;
+    display.textContent = displayText || currentNumber;
   }
 }
 
@@ -100,24 +98,25 @@ function appendNumber(number) {
     shouldResetScreen = false;
     currentNumber = "";
   }
+
   if (number === "." && currentNumber.includes(".")) return;
   if (currentNumber === "0" && number !== ".") {
     currentNumber = number;
   } else {
     currentNumber += number;
   }
-  isLockConsecutiveOperator = false;
+
   updateDisplay();
 }
 function calculate() {
-  if (!previousNumber || !operator || shouldResetScreen) return;
+  if (!previousNumber || !operation || shouldResetScreen) return;
 
   displayExpression += ` ${currentNumber}`;
   const prev = parseFloat(previousNumber);
   const current = parseFloat(currentNumber);
   let result;
 
-  switch (operator) {
+  switch (operation) {
     case "+":
       result = prev + current;
       break;
@@ -140,56 +139,26 @@ function calculate() {
 
   currentNumber = result.toString();
   previousNumber = null;
-  operator = null;
+  operation = null;
   updateDisplay(true);
 }
 function handleReset() {
   currentNumber = "0";
   previousNumber = null;
-  operator = null;
-  isLockConsecutiveOperator = false;
+  operation = null;
   displayExpression = "";
   updateDisplay();
 }
 
-function handleDelete() {
-  if (shouldResetScreen) {
-    // If we're about to reset screen, delete the operator instead
-    if (displayExpression) {
-      displayExpression = displayExpression.slice(0, -2); // Remove operator and space
-      operator = null;
-      shouldResetScreen = false;
-      isLockConsecutiveOperator = false;
-      currentNumber = previousNumber;
-      previousNumber = null;
-    }
+function handleDelete() {}
 
-    console.log("1", 1);
-  } else {
-    if (currentNumber.length === 1) {
-      currentNumber = "";
-      // Reset display expression if we're deleting the last digit
-      console.log("2", 2);
-      if (displayExpression) {
-        displayExpression = displayExpression.slice(
-          0,
-          displayExpression.lastIndexOf(" ")
-        );
-      }
-    } else {
-      currentNumber = currentNumber.slice(0, -1);
-    }
-  }
-  updateDisplay();
-}
-
-function handleOperation(operation) {
-  if (isLockConsecutiveOperator) return;
+function handleOperation(op) {
   if (!displayExpression) {
     displayExpression = currentNumber;
   } else if (!shouldResetScreen) {
     displayExpression += ` ${currentNumber}`;
   }
+
   if (previousNumber === null) {
     previousNumber = currentNumber;
   } else if (!shouldResetScreen) {
@@ -203,22 +172,22 @@ function handleOperation(operation) {
       case "-":
         previousNumber = (prev - current).toString();
         break;
-      case "×":
+      case "x":
         previousNumber = (prev * current).toString();
         break;
       case "/":
         if (current === 0) {
-          alert("Cannot divide by 0");
-        } else {
-          previousNumber = (prev / current).toString();
+          alert("Can't divide by zero!");
+          return;
         }
+        previousNumber = (prev / current).toString();
         break;
     }
   }
-  operator = operation;
-  displayExpression += ` ${operation}`;
+
+  operation = op;
+  displayExpression += ` ${op}`;
   shouldResetScreen = true;
-  isLockConsecutiveOperator = true;
   updateDisplay();
 }
 // Event Listeners
@@ -240,8 +209,8 @@ keys.forEach((key) => {
   });
 });
 
-themeTogglesInput.forEach((toggle) => {
-  toggle.addEventListener("click", () => {
+themeToggles.forEach((toggle) => {
+  toggle.addEventListener("change", () => {
     switchTheme(toggle.id.replace("toggle", ""));
   });
 });
