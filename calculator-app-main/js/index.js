@@ -1,4 +1,3 @@
-// Theme handling
 const themes = {
   1: {
     mainBackground: "hsl(222, 26%, 31%)",
@@ -11,8 +10,9 @@ const themes = {
     keyBackgroundEquals: "hsl(6, 63%, 50%)",
     keyShadowEquals: "hsl(6, 70%, 34%)",
     textPrimary: "hsl(0, 0%, 100%)",
-    textDark: "hsl(221, 14%, 31%)",
-    textWhite: "white",
+    textEquals: "hsl(0, 0%, 100%)",
+    textMainKey: "hsl(223, 31%, 20%)",
+    textFunctionKey: "hsl(0, 0%, 100%)",
   },
   2: {
     mainBackground: "hsl(0, 0%, 90%)",
@@ -25,8 +25,9 @@ const themes = {
     keyBackgroundEquals: "hsl(25, 98%, 40%)",
     keyShadowEquals: "hsl(25, 99%, 27%)",
     textPrimary: "hsl(60, 10%, 19%)",
-    textDark: "white",
-    textWhite: "white",
+    textEquals: "hsl(0, 0%, 100%)",
+    textMainKey: "hsl(60, 10%, 19%)",
+    textFunctionKey: "hsl(0, 0%, 100%)",
   },
   3: {
     mainBackground: "hsl(268, 75%, 9%)",
@@ -39,30 +40,28 @@ const themes = {
     keyBackgroundEquals: "hsl(176, 100%, 44%)",
     keyShadowEquals: "hsl(177, 92%, 70%)",
     textPrimary: "hsl(52, 100%, 62%)",
-    textDark: "hsl(198, 20%, 13%)",
-    textWhite: "white",
+    textEquals: "black",
+    textMainKey: "hsl(52, 100%, 62%)",
+    textFunctionKey: "hsl(0, 0%, 100%)",
   },
 };
 
+//Dom Elements
+
+const resultDisplay = document.querySelector(".calculator__result");
+const keys = document.querySelectorAll(".calculator__key");
+const themeTogglesInput = document.querySelectorAll(".theme-toggle__input");
 // Calculator state
 let currentNumber = "0";
 let previousNumber = null;
-let operation = null;
+let operator = null;
 let shouldResetScreen = false;
 let displayExpression = "";
-
-// DOM Elements
-const display = document.querySelector(".calculator__result");
-const keys = document.querySelectorAll(".calculator__key");
-const themeToggles = document.querySelectorAll(".theme-toggle__input");
-
-// Theme switching
-function setTheme(themeNumber) {
+// Theme Switching
+function switchTheme(themeNumber) {
   const theme = themes[themeNumber];
+
   const root = document.documentElement;
-
-  document.body.setAttribute("data-theme", themeNumber);
-
   Object.entries(theme).forEach(([property, value]) => {
     root.style.setProperty(
       `--${property.replace(/([A-Z])/g, "-$1").toLowerCase()}`,
@@ -70,30 +69,28 @@ function setTheme(themeNumber) {
     );
   });
 
-  localStorage.setItem("calculatorTheme", themeNumber);
+  localStorage.setItem("calculator-theme", themeNumber);
 }
 
-// Initialize theme
 function initializeTheme() {
-  const savedTheme =
-    localStorage.getItem("calculatorTheme") ||
-    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "1" : "2");
-  document.getElementById(`toggle${savedTheme}`).checked = true;
-  setTheme(savedTheme);
+  const themeNumber = localStorage.getItem("calculator-theme") || 1;
+  document.getElementById(`toggle${themeNumber}`).checked = true;
+  switchTheme(themeNumber);
 }
 
-// Calculator functions
+// Calculator Logic
 function updateDisplay(isResult = false) {
   if (isResult) {
-    display.textContent = currentNumber;
+    resultDisplay.textContent = currentNumber;
     displayExpression = "";
   } else {
-    // Show current expression and current number being entered
     let displayText = displayExpression;
-    if (!shouldResetScreen && currentNumber !== "0") {
+
+    if (!shouldResetScreen) {
       displayText += (displayExpression ? " " : "") + currentNumber;
     }
-    display.textContent = displayText || currentNumber;
+
+    resultDisplay.textContent = displayText || currentNumber;
   }
 }
 
@@ -102,24 +99,56 @@ function appendNumber(number) {
     shouldResetScreen = false;
     currentNumber = "";
   }
-
   if (number === "." && currentNumber.includes(".")) return;
   if (currentNumber === "0" && number !== ".") {
     currentNumber = number;
   } else {
     currentNumber += number;
   }
-
   updateDisplay();
 }
+function calculate() {
+  if (!previousNumber || !operator || shouldResetScreen) return;
 
-function handleOperation(op) {
+  displayExpression += ` ${currentNumber}`;
+  const prev = parseFloat(previousNumber);
+  const current = parseFloat(currentNumber);
+  let result;
+
+  switch (operator) {
+    case "+":
+      result = prev + current;
+      break;
+    case "-":
+      result = prev - current;
+      break;
+    case "x":
+      result = prev * current;
+      break;
+    case "/":
+      if (current === 0) {
+        alert("Can't divide by zero!");
+        return;
+      }
+      result = prev / current;
+      break;
+    default:
+      return;
+  }
+
+  currentNumber = result.toString();
+  previousNumber = null;
+  operator = null;
+  updateDisplay(true);
+}
+function handleDelete() {}
+function handleReset() {}
+function handleOperation(operation) {
   if (!displayExpression) {
     displayExpression = currentNumber;
   } else if (!shouldResetScreen) {
     displayExpression += ` ${currentNumber}`;
   }
-
   if (previousNumber === null) {
     previousNumber = currentNumber;
   } else if (!shouldResetScreen) {
@@ -138,73 +167,18 @@ function handleOperation(op) {
         break;
       case "/":
         if (current === 0) {
-          alert("Can't divide by zero!");
-          return;
+          alert("Cannot divide by 0");
+        } else {
+          previousNumber = (prev / current).toString();
         }
-        previousNumber = (prev / current).toString();
         break;
     }
   }
-
-  operation = op;
-  displayExpression += ` ${op}`;
+  operator = operation;
+  displayExpression += ` ${operation}`;
   shouldResetScreen = true;
   updateDisplay();
 }
-
-function calculate() {
-  if (!previousNumber || !operation || shouldResetScreen) return;
-
-  displayExpression += ` ${currentNumber}`;
-
-  const prev = parseFloat(previousNumber);
-  const current = parseFloat(currentNumber);
-  let result;
-
-  switch (operation) {
-    case "+":
-      result = prev + current;
-      break;
-    case "-":
-      result = prev - current;
-      break;
-    case "×":
-      result = prev * current;
-      break;
-    case "/":
-      if (current === 0) {
-        alert("Can't divide by zero!");
-        return;
-      }
-      result = prev / current;
-      break;
-    default:
-      return;
-  }
-
-  currentNumber = result.toString();
-  previousNumber = null;
-  operation = null;
-  updateDisplay(true);
-}
-
-function handleReset() {
-  currentNumber = "0";
-  previousNumber = null;
-  operation = null;
-  displayExpression = "";
-  updateDisplay();
-}
-
-function handleDelete() {
-  if (currentNumber.length === 1) {
-    currentNumber = "0";
-  } else {
-    currentNumber = currentNumber.slice(0, -1);
-  }
-  updateDisplay();
-}
-
 // Event Listeners
 keys.forEach((key) => {
   key.addEventListener("click", () => {
@@ -212,7 +186,7 @@ keys.forEach((key) => {
 
     if (!isNaN(keyContent) || keyContent === ".") {
       appendNumber(keyContent);
-    } else if (["+", "-", "×", "/"].includes(keyContent)) {
+    } else if (["+", "-", "x", "/"].includes(keyContent)) {
       handleOperation(keyContent);
     } else if (keyContent === "=") {
       calculate();
@@ -224,13 +198,10 @@ keys.forEach((key) => {
   });
 });
 
-themeToggles.forEach((toggle) => {
-  toggle.addEventListener("change", (e) => {
-    const themeNumber = e.target.id.replace("toggle", "");
-    setTheme(themeNumber);
+themeTogglesInput.forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    switchTheme(toggle.id.replace("toggle", ""));
   });
 });
 
-// Initialize calculator
 initializeTheme();
-updateDisplay();
