@@ -46,19 +46,15 @@ const themes = {
   },
 };
 
-let currentNumber = "0";
-let previousNumber = null;
-let operation = null;
-let shouldResetScreen = false;
-let displayExpression = "";
-
-// DOM Elements
 const display = document.querySelector(".calculator__result");
 const keys = document.querySelectorAll(".calculator__key");
 const themeToggles = document.querySelectorAll(".theme-toggle__input");
 
-// Theme Switching
-function switchTheme(themeNumber) {
+// A single string to hold the expression
+let displayExpression = "";
+
+// Theme switching
+function setTheme(themeNumber) {
   const theme = themes[themeNumber];
 
   const root = document.documentElement;
@@ -75,132 +71,73 @@ function switchTheme(themeNumber) {
 function initializeTheme() {
   const themeNumber = localStorage.getItem("calculator-theme") || 1;
   document.getElementById(`toggle${themeNumber}`).checked = true;
-  switchTheme(themeNumber);
+  setTheme(themeNumber);
 }
 
-// Calculator Logic
-function updateDisplay(isResult = false) {
-  if (isResult) {
-    display.textContent = currentNumber;
-    displayExpression = "";
-  } else {
-    // Show current expression and current number being entered
-    let displayText = displayExpression;
-    if (!shouldResetScreen && currentNumber !== "0") {
-      displayText += (displayExpression ? " " : "") + currentNumber;
-    }
-    display.textContent = displayText || currentNumber;
-  }
+// Update display
+function updateDisplay() {
+  display.textContent = displayExpression || "0";
 }
 
-function appendNumber(number) {
-  if (shouldResetScreen) {
-    shouldResetScreen = false;
-    currentNumber = "";
-  }
-
-  if (number === "." && currentNumber.includes(".")) return;
-  if (currentNumber === "0" && number !== ".") {
-    currentNumber = number;
-  } else {
-    currentNumber += number;
-  }
-
+// Append number or dot
+function appendCharacter(char) {
+  // Prevent multiple dots in a single number without operator
+  if (char === "." && /(\.\d*$|\.$)/.test(displayExpression)) return;
+  displayExpression += char;
   updateDisplay();
 }
-function calculate() {
-  if (!previousNumber || !operation || shouldResetScreen) return;
 
-  displayExpression += ` ${currentNumber}`;
-  const prev = parseFloat(previousNumber);
-  const current = parseFloat(currentNumber);
-  let result;
+// Handle an operator
+function appendOperator(op) {
+  // Replace 'x' with '*'
+  if (op === "x") op = "*";
 
-  switch (operation) {
-    case "+":
-      result = prev + current;
-      break;
-    case "-":
-      result = prev - current;
-      break;
-    case "x":
-      result = prev * current;
-      break;
-    case "/":
-      if (current === 0) {
-        alert("Can't divide by zero!");
-        return;
-      }
-      result = prev / current;
-      break;
-    default:
-      return;
+  // If last char is an operator, replace it
+  if (/[\+\-\*\/]$/.test(displayExpression)) {
+    displayExpression = displayExpression.slice(0, -1) + op;
+  } else {
+    // Only add operator if there's something on display
+    if (displayExpression !== "") displayExpression += op;
   }
-
-  currentNumber = result.toString();
-  previousNumber = null;
-  operation = null;
-  updateDisplay(true);
+  updateDisplay();
 }
+
+// Calculate using math.js
+function calculateExpression() {
+  if (!displayExpression) return;
+  try {
+    const result = math.evaluate(displayExpression);
+    displayExpression = result.toString();
+  } catch (err) {
+    alert("Invalid expression");
+    displayExpression = "";
+  }
+  updateDisplay();
+}
+
+// Delete last character
+function handleDelete() {
+  displayExpression = displayExpression.slice(0, -1);
+  updateDisplay();
+}
+
+// Reset calculator
 function handleReset() {
-  currentNumber = "0";
-  previousNumber = null;
-  operation = null;
   displayExpression = "";
   updateDisplay();
 }
 
-function handleDelete() {}
-
-function handleOperation(op) {
-  if (!displayExpression) {
-    displayExpression = currentNumber;
-  } else if (!shouldResetScreen) {
-    displayExpression += ` ${currentNumber}`;
-  }
-
-  if (previousNumber === null) {
-    previousNumber = currentNumber;
-  } else if (!shouldResetScreen) {
-    const prev = parseFloat(previousNumber);
-    const current = parseFloat(currentNumber);
-
-    switch (operation) {
-      case "+":
-        previousNumber = (prev + current).toString();
-        break;
-      case "-":
-        previousNumber = (prev - current).toString();
-        break;
-      case "x":
-        previousNumber = (prev * current).toString();
-        break;
-      case "/":
-        if (current === 0) {
-          alert("Can't divide by zero!");
-          return;
-        }
-        previousNumber = (prev / current).toString();
-        break;
-    }
-  }
-
-  operation = op;
-  displayExpression += ` ${op}`;
-  shouldResetScreen = true;
-  updateDisplay();
-}
 // Event Listeners
 keys.forEach((key) => {
   key.addEventListener("click", () => {
     const keyContent = key.textContent;
 
     if (!isNaN(keyContent) || keyContent === ".") {
-      appendNumber(keyContent);
+      appendCharacter(keyContent);
     } else if (["+", "-", "x", "/"].includes(keyContent)) {
-      handleOperation(keyContent);
+      appendOperator(keyContent);
     } else if (keyContent === "=") {
-      calculate();
+      calculateExpression();
     } else if (keyContent === "DEL") {
       handleDelete();
     } else if (keyContent === "RESET") {
@@ -211,9 +148,10 @@ keys.forEach((key) => {
 
 themeToggles.forEach((toggle) => {
   toggle.addEventListener("change", () => {
-    switchTheme(toggle.id.replace("toggle", ""));
+    setTheme(toggle.id.replace("toggle", ""));
   });
 });
 
+// Initialize
 initializeTheme();
 updateDisplay();
