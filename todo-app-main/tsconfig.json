@@ -57,7 +57,7 @@
     },
 
     // Specifies additional type definition files to include
-    "types": ["node", "react", "styled-jsx"],
+    "types": ["node", "styled-jsx"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "allowJs": true,
     "esModuleInterop": true
