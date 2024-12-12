@@ -57,8 +57,10 @@
     },
 
     // Specifies additional type definition files to include
-    "types": ["node", "styled-jsx"],
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "types": ["node", "react", "styled-jsx"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "allowJs": true,
+    "esModuleInterop": true
   },
 
   // Specifies which files and directories should be included in compilation

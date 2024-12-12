@@ -13,3 +13,7 @@ declare module 'styled-jsx/css' {
     styles: JSX.Element;
   };
 }
+
+declare module 'react' {
+  export * from 'react/index';
+}

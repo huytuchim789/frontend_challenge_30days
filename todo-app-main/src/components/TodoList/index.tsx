@@ -5,20 +5,21 @@ import { useState } from 'react';
 const TodoList = () => {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const currentTheme = isDarkMode ? theme.dark : theme.light;
-
   const [isChecked, setIsChecked] = useState(false);
 
   return (
-    <div className={`todo-container`}>
-      <div className={`input-container`}>
+    <div className="todo-container">
+      <div className="input-container">
         <button
           className={`checkbox ${isChecked ? 'checked' : ''}`}
           onClick={() => setIsChecked(!isChecked)}
         >
+          <div className="checkbox-background" />
           {isChecked && <img src="/images/icon-check.svg" alt="check" className="check-icon" />}
         </button>
         <input type="text" placeholder="Create a new todo..." />
       </div>
+
       <style jsx>{`
         .todo-container {
           width: 100%;
@@ -48,7 +49,20 @@ const TodoList = () => {
           justify-content: center;
           padding: 0;
           background: none;
-          transition: all 0.2s ease;
+          transition: border-color 0.3s ease;
+          overflow: hidden;
+        }
+
+        .checkbox-background {
+          position: absolute;
+          inset: -1px;
+          background: linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .checkbox.checked .checkbox-background {
+          opacity: 1;
         }
 
         .checkbox::before {
@@ -67,16 +81,11 @@ const TodoList = () => {
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           opacity: 0;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.3s ease;
         }
 
-        .checkbox:hover::before {
+        .checkbox:hover:not(.checked)::before {
           opacity: 1;
-        }
-
-        .checkbox.checked {
-          border: none;
-          background: linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
         }
 
         .check-icon {
@@ -84,6 +93,12 @@ const TodoList = () => {
           height: 10px;
           position: relative;
           z-index: 1;
+          transform: scale(0);
+          transition: transform 0.3s ease;
+        }
+
+        .checkbox.checked .check-icon {
+          transform: scale(1);
         }
 
         input {
