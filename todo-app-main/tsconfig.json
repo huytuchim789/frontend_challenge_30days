@@ -1,0 +1,69 @@
+{
+  "compilerOptions": {
+    // Specifies the ECMAScript target version for compilation
+    "target": "ES2020",
+
+    // Enables the use of class fields as defined in the latest ECMAScript specification
+    "useDefineForClassFields": true,
+
+    // Specifies which library type definitions to include during compilation
+    // Here, it includes ES2020 standard library, DOM, and DOM.Iterable APIs
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+
+    // Sets the module system to the latest ECMAScript module format
+    "module": "ESNext",
+
+    // Skips type checking of declaration files for faster compilation
+    "skipLibCheck": true,
+
+    // Specifies how module imports are resolved
+    // "bundler" is used with modern bundlers like Vite
+    "moduleResolution": "bundler",
+
+    // Allows importing TypeScript files with extensions
+    "allowImportingTsExtensions": true,
+
+    // Enables importing JSON files as modules
+    "resolveJsonModule": true,
+
+    // Ensures each file can be safely transpiled in isolation
+    "isolatedModules": true,
+
+    // Prevents generating JavaScript output files
+    "noEmit": true,
+
+    // Configures JSX transformation for React
+    "jsx": "react-jsx",
+
+    // Enables all strict type-checking options
+    "strict": true,
+
+    // Raises errors on unused local variables
+    "noUnusedLocals": true,
+
+    // Raises errors on unused function parameters
+    "noUnusedParameters": true,
+
+    // Prevents unintentional fall-through in switch statements
+    "noFallthroughCasesInSwitch": true,
+
+    // Sets the base directory for resolving non-relative module names
+    "baseUrl": ".",
+
+    // Defines path aliases for module imports
+    // Allows importing from "@/" which maps to "src/"
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    // Specifies additional type definition files to include
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+
+  // Specifies which files and directories should be included in compilation
+  "include": ["src", "vite.config.ts"],
+
+  // References to other TypeScript configuration files
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
