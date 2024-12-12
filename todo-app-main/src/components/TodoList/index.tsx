@@ -1,30 +1,36 @@
 import { useThemeStore } from '@/stores/themeStore';
 import { theme } from '@/styles/theme';
+import { useState } from 'react';
 
 const TodoList = () => {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const currentTheme = isDarkMode ? theme.dark : theme.light;
 
+  const [isChecked, setIsChecked] = useState(false);
+
   return (
-    <div className="todo-container">
-      <div className="input-container">
-        <span className="checkbox" />
+    <div className={`todo-container`}>
+      <div className={`input-container`}>
+        <button
+          className={`checkbox ${isChecked ? 'checked' : ''}`}
+          onClick={() => setIsChecked(!isChecked)}
+        >
+          {isChecked && <img src="/images/icon-check.svg" alt="check" className="check-icon" />}
+        </button>
         <input type="text" placeholder="Create a new todo..." />
       </div>
-
       <style jsx>{`
         .todo-container {
           width: 100%;
         }
 
         .input-container {
-          width: 100%;
-          background: ${currentTheme.cardBackground};
-          padding: 20px 24px;
-          border-radius: 5px;
           display: flex;
           align-items: center;
-          gap: 24px;
+          gap: 20px;
+          padding: 20px 24px;
+          background-color: ${currentTheme.cardBackground};
+          border-radius: 5px;
           margin-bottom: 24px;
           transition: background-color 0.3s ease;
         }
@@ -35,16 +41,59 @@ const TodoList = () => {
           border-radius: 50%;
           border: 1px solid ${currentTheme.border};
           flex-shrink: 0;
+          cursor: pointer;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          background: none;
+          transition: all 0.2s ease;
+        }
+
+        .checkbox::before {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          border-radius: 50%;
+          padding: 1px;
+          background: linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+          -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        }
+
+        .checkbox:hover::before {
+          opacity: 1;
+        }
+
+        .checkbox.checked {
+          border: none;
+          background: linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+        }
+
+        .check-icon {
+          width: 10px;
+          height: 10px;
+          position: relative;
+          z-index: 1;
         }
 
         input {
-          width: 100%;
+          flex: 1;
           background: none;
           border: none;
+          outline: none;
+          font-size: 18px;
           color: ${currentTheme.text};
           font-family: 'Josefin Sans', sans-serif;
-          font-size: 18px;
-          outline: none;
         }
 
         input::placeholder {
@@ -55,4 +104,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList; 
+export default TodoList;

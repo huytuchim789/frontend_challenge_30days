@@ -57,12 +57,12 @@
     },
 
     // Specifies additional type definition files to include
-    "types": ["node"],
+    "types": ["node", "styled-jsx"],
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
 
   // Specifies which files and directories should be included in compilation
-  "include": ["src", "vite.config.ts"],
+  "include": ["src", "vite.config.ts", "src/types/*.d.ts"],
 
   // References to other TypeScript configuration files
   "references": [{ "path": "./tsconfig.node.json" }]

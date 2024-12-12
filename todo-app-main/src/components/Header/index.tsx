@@ -2,10 +2,9 @@ import { useThemeStore } from '@/stores/themeStore';
 
 const Header = () => {
   const { isDarkMode, toggleTheme } = useThemeStore();
-
   return (
     <header className="header">
-      <h1>TODO</h1>
+      <h1 className="header-title">Todo</h1>
       <button onClick={toggleTheme} className="theme-toggle">
         <img
           src={isDarkMode ? '/images/icon-sun.svg' : '/images/icon-moon.svg'}
@@ -18,17 +17,15 @@ const Header = () => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 40px;
+          padding: 35px 0px;
         }
-
-        h1 {
-          color: white;
+        .header-title {
+          font-size: 32px;
+          font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 15px;
-          font-size: 40px;
-          font-weight: 700;
+          color: hsl(0, 0%, 100%);
         }
-
         .theme-toggle {
           background: none;
           border: none;
