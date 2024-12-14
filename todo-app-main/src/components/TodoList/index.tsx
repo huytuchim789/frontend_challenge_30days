@@ -7,7 +7,6 @@ import TodoItem from './TodoItem';
 
 import { useState } from 'react';
 
-
 const TodoList = () => {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const currentTheme = isDarkMode ? theme.dark : theme.light;
@@ -54,7 +53,11 @@ const TodoList = () => {
       </form>
 
       <div className="todos-list">
-        <DndContext sensors={[mouseSensor]} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={[mouseSensor]}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
           <SortableContext items={filteredTodos} strategy={verticalListSortingStrategy}>
             {filteredTodos.map((todo) => (
               <TodoItem key={todo.id} todo={todo} />
@@ -205,7 +208,6 @@ const TodoList = () => {
           background: ${currentTheme.cardBackground};
           border-radius: 5px;
           box-shadow: 0 35px 50px -15px rgba(0, 0, 0, 0.1);
-        
         }
 
         .mobile-filters .filters {

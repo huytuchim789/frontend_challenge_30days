@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { arrayMove } from '@dnd-kit/sortable';
 
 export interface Todo {
   id: string;
@@ -45,9 +46,7 @@ export const useTodoStore = create<TodoState>()(
       reorderTodos: (fromIndex, toIndex) =>
         set((state) => {
           const newTodos = [...state.todos];
-          const [removed] = newTodos.splice(fromIndex, 1);
-          newTodos.splice(toIndex, 0, removed);
-          return { todos: newTodos };
+          return { todos: arrayMove(newTodos, fromIndex, toIndex) };
         }),
     }),
     {
