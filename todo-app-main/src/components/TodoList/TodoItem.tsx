@@ -91,12 +91,16 @@ const TodoItem = ({ todo }: TodoItemProps) => {
         .checkbox::before {
           content: '';
           position: absolute;
-          inset: -1px;
+          inset: 0px;
           border-radius: 50%;
           padding: 1px;
           background: linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           opacity: 0;
@@ -145,7 +149,7 @@ const TodoItem = ({ todo }: TodoItemProps) => {
         }
 
         .delete-btn:hover img {
-          filter: brightness(0.8);
+          filter: brightness(1.2);
         }
       `}</style>
     </div>

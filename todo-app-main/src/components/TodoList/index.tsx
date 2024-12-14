@@ -21,6 +21,7 @@ const TodoList = () => {
     if (newTodo.trim()) {
       addTodo(newTodo.trim());
       setNewTodo('');
+      setFilter('all');
     }
   };
 
