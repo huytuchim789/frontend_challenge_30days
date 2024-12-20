@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware'
 export interface Document {
   id: string
   title: string
-  content: string
+  content?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -12,7 +12,7 @@ export interface Document {
 interface DocumentStore {
   documents: Document[]
   activeDocument: Document | null
-  createDocument: (title: string, content: string) => void
+  createDocument: (title: string, content?: string) => void
   updateDocument: (id: string, updates: Partial<Document>) => void
   deleteDocument: (id: string) => void
   setActiveDocument: (document: Document | null) => void

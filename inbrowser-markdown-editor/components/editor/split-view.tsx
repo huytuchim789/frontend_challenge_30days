@@ -28,6 +28,8 @@ export function SplitView({ left, right, className }: SplitViewProps) {
 
       const paneWidth = splitPaneRef.current.clientWidth;
       const position = (e.clientX / paneWidth) * 100;
+      console.log("paneWidth", paneWidth);
+      console.log("position", e.clientX);
 
       // Limit the resize between 30% and 70%
       const limitedPosition = Math.min(Math.max(position, 30), 70);
@@ -54,7 +56,7 @@ export function SplitView({ left, right, className }: SplitViewProps) {
       className={cn("flex h-full overflow-hidden", className)}
     >
       <div
-        className="h-full min-h-0 overflow-hidden"
+        className="h-screen min-h-0 overflow-y-auto"
         style={{ width: `${splitPosition}%` }}
       >
         {left}
@@ -64,11 +66,13 @@ export function SplitView({ left, right, className }: SplitViewProps) {
         onMouseDown={startResizing}
       >
         <div className="absolute inset-y-0 -left-1 w-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" />
+        {/* The line that is used to resize the split view */}
         <div className="absolute inset-y-0 left-[-1px] w-[2px] bg-zinc-200 dark:bg-zinc-800" />
+        {/* The hovered that is used to resize the split view */}
       </div>
       <div
         style={{ width: `${100 - splitPosition}%` }}
-        className="h-full min-h-0 overflow-hidden"
+        className="h-screen min-h-0 overflow-y-auto"
       >
         {right}
       </div>
